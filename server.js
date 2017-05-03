@@ -60,3 +60,27 @@ app.post('/login',function(req.res){
 	})
 	
 })
+app.post('submit',function(req.res){
+		mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('error occur');
+		}else{
+			db.collection('customers').findOne({"username":req.body.username},function(err,result){
+				console.log(result);
+				if(result){
+					req.session.loguser = result;
+					res.send('user exist! ');
+					
+				}else{
+					db.collection('customers').insert({"username":req.body.username,"password":req.body.password});
+					res.send('success');
+				}
+				db.close();
+			})
+			
+		}
+	})
+})
+app.listen(9109,function(){
+	console.log('server running @ localhost:9109');
+});
