@@ -1,0 +1,50 @@
+var app = angular.module('myapp',['ngRoute']);
+app.config(function($routeProvider){
+	$routeProvider.when('/home',{
+	     templateUrl:'home.html',
+	     controller:'homecontroller',
+	})
+	.when('/checkout',{
+	     templateUrl:'checkout.html',
+	     controller:'checkoutcontroller',		
+	})
+	.when('/cart',{
+		 templateUrl:'cart.html',
+	     controller:'cartcontroller',	
+	})
+	.otherwise({redirectTo:'/home'});
+	
+});
+/*fsdfsf*/
+app.factory('customefactory',['$scope','$http','$log',function($scope,$http,$log){
+	var customeservice = {};    
+	customeservice.login = function(customer){
+		$http.post('/login',customer)
+	};
+	customeservice.checkout = function(customer){
+	    $http.post('/checkout',customer)
+	};
+	return logservice;
+	
+	
+}])
+app.controller('signupcontroller',['$scope','$location',function($scope,$location){
+
+	
+}])
+
+app.controller('checkoutcontroller',['$scope','$location','customefactory',function($scope,$location,customefactory){
+	var customer = {'username':$scope.username,'orders':{'address':$scope.address,'phone':$scope.phone}};
+	$scope.checkout = function(){
+		customefactory.checkout(customer)
+		.success(function(rep){
+			if(rep==='success'){
+				$location.path('/home');
+			}
+			console.log(rep);
+		})
+
+	}
+	
+}])
+

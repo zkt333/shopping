@@ -17,17 +17,17 @@ new_db.open(function(err, db){
 	}
 })*/
 
-var conn_str = 'mongodb://localhost:27017/example';
+var conn_str = 'mongodb://localhost:27017/shopping';
 app.use(express.static('assets'));
 app.use(bodyParser.json());
 var store = new mongodbstore({
-	uri:'mongodb://localhost:27017/example',
-	collection:'example_session'
+	uri:'mongodb://localhost:27017/shopping',
+	collection:'shopping_session'
 	});
 app.use(
 		session({
-			secret:'example_sess_secret_key',
-			cookie:{maxAge:1000*60*2}
+			secret:'shopping_sess_secret_key',
+			cookie:{maxAge:10000*60*2},
 			resave:true,
 			saveUninitialized:true,
 			store:store
@@ -39,48 +39,43 @@ store.on('error',function(err){
 app.get('/',function(req,res){
 	res.sendFile(__dirname + "/index.html");
 })
-app.post('/login',function(req.res){
-	mongoclient.connect(conn_str,function(err,db){
+app.get('/home',function(req,res){
+    mongoclient.connect(conn_str,function(err,db){
 		if(err){
-			console.log('error occur');
+			res.send('got a problem')
 		}else{
-			db.collection('customers').findOne({"username":req.body.username,"password":req.body.password},function(err,result){
-				console.log(result);
-				if(result){
-					req.session.loguser = result;
-					res.send('success');
-					
-				}else{
-					res.send('failed');
-				}
-				db.close();
-			})
-			
-		}
+	   db.collection('products').find({"id":"123456"}),function(err,result){
+		   if(result){
+			   console.log(result)
+		   }else{
+			   res.send('failed');
+		   }
+	   };
+	   }
+		db.close();
 	})
-	
+    
+
 })
-app.post('submit',function(req.res){
+/*app.post('/submit',function(req,res){
 		mongoclient.connect(conn_str,function(err,db){
 		if(err){
 			console.log('error occur');
 		}else{
-			db.collection('customers').findOne({"username":req.body.username},function(err,result){
+			db.collection('products').update({"product":{"id":req.body.productid}},{$set:{"product":{"quality":req.body.quality}},function(err,result){
 				console.log(result);
 				if(result){
-					req.session.loguser = result;
-					res.send('user exist! ');
+
+                       db.collection('orders').insert({"order":{"id":req.body.id,"productid":req.body.productid,"address":req.body.address,"price":req.body.price}});
+					   res.send('success');
 					
-				}else{
-					db.collection('customers').insert({"username":req.body.username,"password":req.body.password});
-					res.send('success');
 				}
 				db.close();
-			})
+			}
 			
-		}
+		})
 	})
-})
+})*/
 app.listen(9109,function(){
 	console.log('server running @ localhost:9109');
 });

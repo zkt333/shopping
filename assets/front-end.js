@@ -1,16 +1,8 @@
 var app = angular.module('myapp',['ngRoute']);
 app.config(function($routeProvider){
-	$routeProvider.when('/login',{
-	     templateUrl:'login.html',
-	     controller:'logincontroller'
-	})
-	.when('/home',{
+	$routeProvider.when('/home',{
 	     templateUrl:'home.html',
 	     controller:'homecontroller',
-	})
-	.when('/signup',{
-	     templateUrl:'signup.html',
-	     controller:'signupcontroller',		
 	})
 	.when('/checkout',{
 	     templateUrl:'checkout.html',
@@ -20,28 +12,44 @@ app.config(function($routeProvider){
 		 templateUrl:'cart.html',
 	     controller:'cartcontroller',	
 	})
-	.otherwise({redirectTo:'/login'});
+	.otherwise({redirectTo:'/home'});
 	
 });
 /*fsdfsf*/
-app.factory('customefactory',['$scope','$http','$log',function($scope,$http,$log){
-	var customeservice = {};    
-	customeservice.login = function(customer){
-		$http.post('/login',customer)
-		})
+app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$log){
+	var customerservice = {};    
+	customerservice.checkout = function(customer,callback){
+	    $http.post('/checkout',customer)
+	    .then(function(){
+	    	callback();
+	    })
 	};
 	return logservice;
 	
 	
 }])
-app.controller('signupcontroller',['$scope','$location',function($scope,$location){
+app.controller('homecontroller',['$scope','$location','$http',function($scope,$location,$http){
 
-	
+	$http.get('/home')
+		.success(function(rep){
+	        if(rep==='failed'){
+			    alert('please try again!');
+			}else{
+			  console.log(rep);
+			   $scope.product.name = rep.product.name;
+			   $scope.product.id = rep.product.id;
+			   $scope.product.quality = rep.product.quality;
+			   $scope.product.price = rep.product.price;
+
+			}
+	       
+	})
 }])
-app.controller('logincontroller',['$scope','$location','customefactory',function($scope,$location,customefactory){
-	var customer = {'username':$scope.username,'password':$scope.password};
-	$scope.login = function(){
-		customefactory.login(customer)
+
+app.controller('checkoutcontroller',['$scope','$location','customefactory',function($scope,$location,customefactory){
+	var customer = {'username':$scope.username,'orders':{'address':$scope.address,'phone':$scope.phone}};
+	$scope.checkout = function(){
+		customefactory.checkout(customer)
 		.success(function(rep){
 			if(rep==='success'){
 				$location.path('/home');
@@ -52,3 +60,5 @@ app.controller('logincontroller',['$scope','$location','customefactory',function
 	}
 	
 }])
+
+
