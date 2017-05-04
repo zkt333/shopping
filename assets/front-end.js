@@ -23,22 +23,11 @@ app.config(function($routeProvider){
 	.otherwise({redirectTo:'/login'});
 	
 });
+/*fsdfsf*/
 app.factory('customefactory',['$scope','$http','$log',function($scope,$http,$log){
 	var customeservice = {};    
 	customeservice.login = function(customer){
 		$http.post('/login',customer)
-		.success(function(rep){
-			//alert(rep.name);
-			    //console.log(rep);
-		        if(rep==='success'){
-		        	$location.path('/home');
-		        }
-		        else{
-		        	alert('login failed');
-		        }
-
-				
-			
 		})
 	};
 	return logservice;
@@ -52,7 +41,14 @@ app.controller('signupcontroller',['$scope','$location',function($scope,$locatio
 app.controller('logincontroller',['$scope','$location','customefactory',function($scope,$location,customefactory){
 	var customer = {'username':$scope.username,'password':$scope.password};
 	$scope.login = function(){
-		customefactory.login(customer);
+		customefactory.login(customer)
+		.success(function(rep){
+			if(rep==='success'){
+				$location.path('/home');
+			}
+			console.log(rep);
+		})
+
 	}
 	
 }])
