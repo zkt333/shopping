@@ -2,7 +2,10 @@
 <table ng-repeat='value in products'>
 <tr>
 <td>{{value.name}}</<td>
+<td>{{value.price}}</td>
+<td id=$index>{{value.id}}
+<td><button ng-click='addtocart($index)'>add to cart</button></td>
 </tr>
 <table>
-
+<button ng-click='gotocart()'>cart</button>
 <div>

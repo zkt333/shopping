@@ -12,6 +12,10 @@ app.config(function($routeProvider){
 		 templateUrl:'cart.html',
 	     controller:'cartcontroller',	
 	})
+	.when('/cart',{
+	     templateUrl:'cart.html',
+	     controller:'cartcontroller',		
+	})
 	.otherwise({redirectTo:'/home'});
 	
 });
@@ -29,7 +33,6 @@ app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$lo
 	
 }])
 app.controller('homecontroller',['$scope','$location','$http',function($scope,$location,$http){
-
 	$http.get('/home')
 		.success(function(rep){
 	        if(rep==='failed'){
@@ -44,6 +47,11 @@ app.controller('homecontroller',['$scope','$location','$http',function($scope,$l
 			}
 	       
 	})
+	
+	$scope.addtocart = function(index){
+		localStorage.setItem("mycart", );
+		
+	}
 }])
 
 app.controller('checkoutcontroller',['$scope','$location','customefactory',function($scope,$location,customefactory){

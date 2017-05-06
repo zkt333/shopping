@@ -1,9 +1,9 @@
 <div>
-<input type='text' placeholder='firstname' ng-model='firstname'></input></br>
-<input type='text' placeholder='lastname' ng-model='lastname'></input></br>
-<input type='text' placeholder='address' ng-model='address'></input></br>
-<input type='text' placeholder='city' ng-model='city'></input></br>
-<input type='text' placeholder='zipcode' ng-model='zipcode'></input></br>
-<input type='text' placeholder='phone' ng-model='phone'></input></br>
-<button>checkout</button>
+<table ng-repeat='value in customer' >
+    <tr>
+    <td>product:{{value.name}}}}</td>
+    <td>Price:{{value.price}}}}</td>
+    </tr>
+</table>
+<button ng-click='tocheckout()'>continue to checkout</button>
 </div>
