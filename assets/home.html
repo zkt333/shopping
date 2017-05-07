@@ -1,9 +1,9 @@
 <div>
-<table ng-repeat='value in products'>
-<tr>
+<table class='table table-striped table-hover table-condensed' border='1'>
+<tr ng-repeat='value in products'>
 <td>{{value.name}}</<td>
 <td>{{value.price}}</td>
-<td id=$index>{{value.id}}
+<td id=$index>{{value.id}}</td>
 <td><button ng-click='addtocart($index)'>add to cart</button></td>
 </tr>
 <table>

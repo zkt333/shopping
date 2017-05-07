@@ -1,0 +1,8 @@
+  
+  <label>Search: <input type='text' placeholder='search' ng-model='SearchInfo'></label>
+  <table class='table table-striped table-hover table-condensed' border='1'>
+    <tr><th>name</th><th>color</th><th>Style Code</th><th>check</th></tr>
+    <tr ng-repeat='value in threads | filter:SearchInfo'>
+      <td>{{value.name}}</td><td>{{value.title}}</td><td>{{value.relationalId}}</td><td><button ng-click='view(value.relationalId)'>infomation</button></td>
+    </tr>
+  </table>
