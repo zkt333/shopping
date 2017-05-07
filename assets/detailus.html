@@ -1,11 +1,15 @@
-<div style="background-image:url({{image}});background-size:cover">
-<a href={{link}}>SNKRS link</a>
-<a href='#/us'>Back</a>
+<div>
+<button ng-click='logout()'>logout</button><br>
+<a href={{link}}  target="_blank">SNKRS link</a>
+<a href='#/us' >Back</a>
 <div><font size='10' color='red'>Bisc Information</font></div>
-<table class='table' border='1' style='background-color:blue'>
+<table class='table' border='1'>
   <tr><th>Title</th><th>style-number</th><th>Price</th><th>merchStatus</th><th>selectionEngine</th><th>estimatedLaunchDate</th><th>startSellDate</th><th>waitinline</th></tr>
   <tr><td>{{fullTitle}}</td><td>{{stylenumber}}</td><td>{{price}}</td><td>{{merchStatus}}</td><td>{{selectionEngine}}</td><td>{{estimatedLaunchDate}}</td><td>{{startSellDate}}</td><td>{{waitinline}}</td></tr>
 </table>
+<div><font size='10'>Image</font><br/>
+<img src='{{image}}' height='350' weight='350' align="middle" alt="Smiley face" margin-left:50%/>
+</div>
 <div><font size='10' color='red'>Size Infomations</font></div>
 <table class='table' border='1'>
   <tr><th>Size</th><th>Available</th></tr>

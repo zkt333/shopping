@@ -4,7 +4,7 @@ var mongodb = require('mongodb');
 var http = require('http');
 
 var mongoclient = require('mongodb').MongoClient;
-
+var conn_str = 'mongodb://localhost:27017/shopping';
 
 var bodyParser = require('body-parser');
 var session = require('express-session');
@@ -17,7 +17,7 @@ new_db.open(function(err, db){
 	}
 })*/
 
-var conn_str = 'mongodb://localhost:27017/shopping';
+
 app.use(express.static('assets'));
 app.use(bodyParser.json());
 var store = new mongodbstore({
@@ -44,7 +44,7 @@ app.get('/home',function(req,res){
 		if(err){
 			res.send('got a problem')
 		}else{
-	   db.collection('products').find({"id":"123456"}),function(err,result){
+	   db.collection('products').findOne({"id":"123456"}),function(err,result){
 		   if(result){
 			   console.log(result)
 		   }else{
@@ -76,6 +76,46 @@ app.get('/home',function(req,res){
 		})
 	})
 })*/
+app.post('/login',function(req,res){
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('error');
+		}else{
+			console.log('connected')
+			console.log(req.body);
+			db.collection('customers').findOne({"username":req.body.username,"password":req.body.password},function(err,result){
+				if(result){
+					req.session.loguser = result;
+					console.log(result);
+					res.send('success');
+				}else{
+					console.log(result);
+					res.send('failed');
+					
+				}
+				db.close();
+				
+			})
+			
+		}
+		
+		
+	})
+	
+	
+})
+app.get('/isloggedin',function(req,res){
+	if(req.session.loguser!=null){
+		res.send(req.session.loguser);
+	}else{
+		res.send(false);
+	}
+	
+});
+app.get('/logout',function(req,res){
+	req.session.loguser=null;
+	res.send('successful');
+});
 app.listen(9109,function(){
 	console.log('server running @ localhost:9109');
 });

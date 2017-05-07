@@ -8,13 +8,14 @@ app.config(function($routeProvider){
 	     templateUrl:'checkout.html',
 	     controller:'checkoutcontroller',		
 	})
+	.when('/login',{
+		 templateUrl:'login.html',
+	     controller:'logincontroller',	
+		
+	})
 	.when('/cart',{
 		 templateUrl:'cart.html',
 	     controller:'cartcontroller',	
-	})
-	.when('/cart',{
-	     templateUrl:'cart.html',
-	     controller:'cartcontroller',		
 	})
 	.when('/cn',{
 		templateUrl:'cn.html',
@@ -32,7 +33,7 @@ app.config(function($routeProvider){
 	  templateUrl:'detailus.html',
 		controller:'detailuscontroller',
 	})
-	.otherwise({redirectTo:'/home'});
+	.otherwise({redirectTo:'/login'});
 	
 });
 /*fsdfsf*/
@@ -49,6 +50,15 @@ app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$lo
 	
 }])
 app.controller('homecontroller',['$scope','$location','$http',function($scope,$location,$http){
+	$http.get('/isloggedin')
+	.success(function(rep){
+		if(!rep){
+			$location.path('/login');
+		}else{
+			$scope.adminname = rep.username;
+			$scope.password = rep.password;
+		}
+	});
 	$http.get('/home')
 		.success(function(rep){
 	        if(rep==='failed'){
@@ -64,13 +74,31 @@ app.controller('homecontroller',['$scope','$location','$http',function($scope,$l
 	       
 	})
 	
+	$scope.logout = function(){
+		$http.get('/logout')
+		.success(function(rep){
+			if(rep==='successful'){
+				$location.path('/login');
+			}
+		})
+	};
+	
 	$scope.addtocart = function(index){
-		localStorage.setItem("mycart", );
+		/*localStorage.setItem("mycart", );*/
 		
 	}
 }])
 
 app.controller('checkoutcontroller',['$scope','$location','customefactory',function($scope,$location,customefactory){
+	$http.get('/isloggedin')
+	.success(function(rep){
+		if(!rep){
+			$location.path('/login');
+		}else{
+			$scope.adminname = rep.username;
+			$scope.password = rep.password;
+		}
+	});
 	var customer = {'username':$scope.username,'orders':{'address':$scope.address,'phone':$scope.phone}};
 	$scope.checkout = function(){
 		customefactory.checkout(customer)
@@ -82,12 +110,28 @@ app.controller('checkoutcontroller',['$scope','$location','customefactory',funct
 		})
 
 	}
+	$scope.logout = function(){
+		$http.get('/logout')
+		.success(function(rep){
+			if(rep==='successful'){
+				$location.path('/login');
+			}
+		})
+	};
 	
 }])
 
   app.controller('cncontroller',['$scope','$http','$location','$rootScope',function($scope,$http,$location,$rootScope){
-
-		  $http.get("https://api.nike.com/commerce/productfeed/products/snkrs/threads?country=CN&limit=500&locale=zh_CN&withCards=true")
+		$http.get('/isloggedin')
+		.success(function(rep){
+			if(!rep){
+				$location.path('/login');
+			}else{
+				$scope.adminname = rep.username;
+				$scope.password = rep.password;
+			}
+		});
+		  $http.get("https://api.nike.com/commerce/productfeed/products/snkrs/threads?country=CN&limit=10000&locale=zh_CN&withCards=true")
 		  .then(function(rep){
 			  $scope.threads = rep.data.threads;
 			  /*console.log(rep.data.threads)*/
@@ -120,20 +164,53 @@ app.controller('checkoutcontroller',['$scope','$location','customefactory',funct
 		      
 		    })
 		  };
+			$scope.logout = function(){
+				$http.get('/logout')
+				.success(function(rep){
+					if(rep==='successful'){
+						$location.path('/login');
+					}
+				})
+			};
 		  
 	  
 	  
   }]);
 
 app.controller('detailcncontroller',['$scope','$http','$location','$rootScope',function($scope,$http,$location,$rootScope){
-      $scope.link = $rootScope.link;
+	$http.get('/isloggedin')
+	.success(function(rep){
+		if(!rep){
+			$location.path('/login');
+		}else{
+			$scope.adminname = rep.username;
+			$scope.password = rep.password;
+		}
+	}); 
+	$scope.link = $rootScope.link;
+	$scope.logout = function(){
+		$http.get('/logout')
+		.success(function(rep){
+			if(rep==='successful'){
+				$location.path('/login');
+			}
+		})
+	};
   
 }]);
 
 
 app.controller('uscontroller',['$scope','$http','$location','$rootScope',function($scope,$http,$location,$rootScope){
-
-		  $http.get("https://api.nike.com/commerce/productfeed/products/snkrs/threads?country=US&limit=500&locale=en_US&withCards=true")
+	$http.get('/isloggedin')
+	.success(function(rep){
+		if(!rep){
+			$location.path('/login');
+		}else{
+			$scope.adminname = rep.username;
+			$scope.password = rep.password;
+		}
+	});
+		  $http.get("https://api.nike.com/commerce/productfeed/products/snkrs/threads?country=US&limit=10000&locale=en_US&withCards=true")
 		  .then(function(rep){
 			  $scope.threads = rep.data.threads;
 			  /*console.log(rep.data.threads)*/
@@ -166,14 +243,58 @@ app.controller('uscontroller',['$scope','$http','$location','$rootScope',functio
 		      
 		    })
 		  };
-		  
+			$scope.logout = function(){
+				$http.get('/logout')
+				.success(function(rep){
+					if(rep==='successful'){
+						$location.path('/login');
+					}
+				})
+			};
 	  
 	  
   }]);
 
 app.controller('detailuscontroller',['$scope','$http','$location','$rootScope',function($scope,$http,$location,$rootScope){
-      $scope.link = $rootScope.link;
+	$http.get('/isloggedin')
+	.success(function(rep){
+		if(!rep){
+			$location.path('/login');
+		}else{
+			$scope.adminname = rep.username;
+			$scope.password = rep.password;
+		}
+	});  
+	$scope.link = $rootScope.link;
+	$scope.logout = function(){
+		$http.get('/logout')
+		.success(function(rep){
+			if(rep==='successful'){
+				$location.path('/login');
+			}
+		})
+	};
+      
   
 }]);
+app.controller('logincontroller',['$scope','$http','$location',function($scope,$http,$location){
 
+	
+	$scope.login = function(){
+		var username = $scope.username;
+		var password = $scope.password;
+		var customer = {"username":username,"password":password};
+		//console.log(username);
+		$http.post('/login',customer)
+	.success(function(rep){
+			if(rep==='success'){
+				$location.path('/home');
+			}
+			
+		})
+		
+	}
+	
+	
+}])
 
