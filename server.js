@@ -40,21 +40,23 @@ app.get('/',function(req,res){
 	res.sendFile(__dirname + "/index.html");
 })
 app.get('/home',function(req,res){
-    mongoclient.connect(conn_str,function(err,db){
+	mongoclient.connect(conn_str,function(err,db){
 		if(err){
-			res.send('got a problem')
+			console.log('error');
 		}else{
-	   db.collection('products').findOne({"id":"123456"}),function(err,result){
-		   if(result){
-			   console.log(result)
-		   }else{
-			   res.send('failed');
-		   }
-	   };
-	   }
-		db.close();
+			console.log('connected');
+			db.collection('products').find({'price':'2999'}).toArray(function(err,result){
+				if(result){
+					res.send(result);
+				}else{
+					res.send('failed');
+				}
+				db.close();
+			})
+		}
+		
+		
 	})
-    
 
 })
 /*app.post('/submit',function(req,res){
@@ -116,6 +118,28 @@ app.get('/logout',function(req,res){
 	req.session.loguser=null;
 	res.send('successful');
 });
+app.post('/product',function(req,res){
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('error');
+		}else{
+			console.log('connected');
+			db.collection('customers').findOne({"id":req.body},function(err,result){
+				if(result){
+					
+					res.send(result);
+					
+				}else{
+					res.send('failed');
+				}
+				db.close();
+			})
+		}
+		
+	})
+	
+});
+
 app.listen(9109,function(){
 	console.log('server running @ localhost:9109');
 });

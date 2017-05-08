@@ -33,7 +33,11 @@ app.config(function($routeProvider){
 	  templateUrl:'detailus.html',
 		controller:'detailuscontroller',
 	})
-	.otherwise({redirectTo:'/login'});
+	.when('/product',{
+		templateUrl:'product.html',
+		controller:'productcontroller',
+	})
+	.otherwise({redirectTo:'/home'});
 	
 });
 /*fsdfsf*/
@@ -49,7 +53,7 @@ app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$lo
 	
 	
 }])
-app.controller('homecontroller',['$scope','$location','$http',function($scope,$location,$http){
+app.controller('homecontroller',['$scope','$location','$http','$rootScope',function($scope,$location,$http,$rootScope){
 	$http.get('/isloggedin')
 	.success(function(rep){
 		if(!rep){
@@ -64,11 +68,9 @@ app.controller('homecontroller',['$scope','$location','$http',function($scope,$l
 	        if(rep==='failed'){
 			    alert('please try again!');
 			}else{
-			  console.log(rep);
-			   $scope.product.name = rep.product.name;
-			   $scope.product.id = rep.product.id;
-			   $scope.product.quality = rep.product.quality;
-			   $scope.product.price = rep.product.price;
+			  /*console.log(rep);*/
+			  $scope.products = rep;
+			  console.log($scope.products.price);
 
 			}
 	       
@@ -82,6 +84,22 @@ app.controller('homecontroller',['$scope','$location','$http',function($scope,$l
 			}
 		})
 	};
+	
+	$scope.view = function(id){
+		var ID = id;
+		console.log(typeof(ID));
+		$http.post('/product',ID)
+		.success(function(rep){
+			if(rep==='failed'){
+				alert('error occur')
+			}else{
+				$rootScope.product = rep;
+				$location.path('/product');
+			}
+			
+		})
+		
+	}
 	
 	$scope.addtocart = function(index){
 		/*localStorage.setItem("mycart", );*/
@@ -289,6 +307,10 @@ app.controller('logincontroller',['$scope','$http','$location',function($scope,$
 	.success(function(rep){
 			if(rep==='success'){
 				$location.path('/home');
+			}else{
+				alert('wrong username or wrong password!!!');
+				$scope.username='';
+				$scope.password='';
 			}
 			
 		})
@@ -298,3 +320,17 @@ app.controller('logincontroller',['$scope','$http','$location',function($scope,$
 	
 }])
 
+app.controller('productcontroller',['$scope','$http',function($scope,$http){
+	$scope.product = $rootScope.product;
+	$scope.name = $scope.product.productname;
+	$scope.price = $scope.product.price;
+	$scope.size = $scope.product.size;
+	$scope.addtocart = function(){
+		
+		
+	}
+
+	
+	
+	
+}])
