@@ -37,7 +37,7 @@ app.config(function($routeProvider){
 		templateUrl:'product.html',
 		controller:'productcontroller',
 	})
-	.otherwise({redirectTo:'/home'});
+	
 	
 });
 /*fsdfsf*/
@@ -86,14 +86,15 @@ app.controller('homecontroller',['$scope','$location','$http','$rootScope',funct
 	};
 	
 	$scope.view = function(id){
-		var ID = id;
-		console.log(typeof(ID));
+		var ID = {"id":id};
+		//console.log(typeof(ID));
 		$http.post('/product',ID)
 		.success(function(rep){
 			if(rep==='failed'){
 				alert('error occur')
 			}else{
 				$rootScope.product = rep;
+				console.log(rep);
 				$location.path('/product');
 			}
 			
@@ -101,8 +102,17 @@ app.controller('homecontroller',['$scope','$location','$http','$rootScope',funct
 		
 	}
 	
-	$scope.addtocart = function(index){
-		/*localStorage.setItem("mycart", );*/
+	$scope.addtocart = function(id){
+		var ID = {"id":id};
+		$http.post('/add',ID)
+		.success(function(rep){
+			if(rep==='failed'){
+				alert('sold out!');
+			}else{
+				
+			}
+			
+		})
 		
 	}
 }])
@@ -157,7 +167,7 @@ app.controller('checkoutcontroller',['$scope','$location','customefactory',funct
 			  
 		  })
 		  
-		  $scope.view = function(id){
+		  $scope.information = function(id){
 		    /*console.log(id);*/
 		    $http.get("https://api.nike.com/commerce/productfeed/products/snkrs/" + id + "/thread?country=CN&locale=zh_CN&withCards=true")
 		    .then(function(rep){
@@ -236,7 +246,7 @@ app.controller('uscontroller',['$scope','$http','$location','$rootScope',functio
 			  
 		  })
 		  
-		  $scope.view = function(id){
+		  $scope.information = function(id){
 		    /*console.log(id);*/
 		    $http.get("https://api.nike.com/commerce/productfeed/products/snkrs/" + id + "/thread?country=US&locale=en_US&withCards=true")
 		    .then(function(rep){
@@ -250,7 +260,7 @@ app.controller('uscontroller',['$scope','$http','$location','$rootScope',functio
 		      $rootScope.sizeinfo = rep.data.product.skus;
 		      $rootScope.fullTitle = rep.data.product.fullTitle;
 		      $rootScope.effectiveInStockStartSellDate = rep.data.product.effectiveInStockStartSellDate;
-		      $rootScope.link = 'https://www.nike.com/cn/launch/thread/'+rep.data.id;
+		      $rootScope.link = 'https://www.nike.com/launch/thread/'+rep.data.id;
 		      $rootScope.merchStatus = rep.data.product.merchStatus;
 		      $rootScope.selectionEngine = rep.data.product.selectionEngine;
 		      $rootScope.estimatedLaunchDate = rep.data.product.estimatedLaunchDate;
@@ -320,11 +330,13 @@ app.controller('logincontroller',['$scope','$http','$location',function($scope,$
 	
 }])
 
-app.controller('productcontroller',['$scope','$http',function($scope,$http){
+app.controller('productcontroller',['$scope','$http','$rootScope',function($scope,$http,$rootScope){
 	$scope.product = $rootScope.product;
 	$scope.name = $scope.product.productname;
 	$scope.price = $scope.product.price;
 	$scope.size = $scope.product.size;
+	$scope.imgURL = $scope.product.imgURL;
+	console.log($scope.imgURL);
 	$scope.addtocart = function(){
 		
 		

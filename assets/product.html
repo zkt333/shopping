@@ -2,3 +2,12 @@
   <tr><th>Name</th><th>Price</th><th>Size</th></tr>
   <tr><td>{{name}}</td><td>{{price}}</td><td>{{size}}</td></tr>
 </table>
+
+<div>
+<table class='table'>
+{{imgUrl}}
+<tr ng-repeat='value in imgURL track by $index'>
+<image src='{{value}}' class='image'></image>
+<tr>
+</table>
+</div>

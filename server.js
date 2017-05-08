@@ -45,7 +45,7 @@ app.get('/home',function(req,res){
 			console.log('error');
 		}else{
 			console.log('connected');
-			db.collection('products').find({'price':'2999'}).toArray(function(err,result){
+			db.collection('products').find().toArray(function(err,result){
 				if(result){
 					res.send(result);
 				}else{
@@ -124,7 +124,7 @@ app.post('/product',function(req,res){
 			console.log('error');
 		}else{
 			console.log('connected');
-			db.collection('customers').findOne({"id":req.body},function(err,result){
+			db.collection('products').findOne({"id":req.body.id},function(err,result){
 				if(result){
 					
 					res.send(result);
