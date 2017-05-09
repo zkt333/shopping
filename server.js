@@ -139,6 +139,37 @@ app.post('/product',function(req,res){
 	})
 	
 });
+app.post('/add',function(req,res){
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('error');
+		}else{
+			console.log('connected');
+			db.collection('products').findOne({"id":req.body.id},function(err,result){
+				if(result){
+					if(result.quality!="0"){
+						db.collection('customers').update({"username":req.body.username},{$set:{"orders":[{"productname":result.productname,"price":result.price,"quality":"1"}]}},function(err,re){
+							if(re){
+								console.log(re.username);
+								res.send('success');
+							}
+							
+						})
+						
+					}else{
+						res.send('failed');
+					}
+					
+				}
+				db.close();
+				
+			})
+		}
+		
+	})
+
+
+})
 
 app.listen(9109,function(){
 	console.log('server running @ localhost:9109');

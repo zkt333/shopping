@@ -59,8 +59,8 @@ app.controller('homecontroller',['$scope','$location','$http','$rootScope',funct
 		if(!rep){
 			$location.path('/login');
 		}else{
-			$scope.adminname = rep.username;
-			$scope.password = rep.password;
+			$rootScope.adminname = rep.username;
+			$rootScope.password = rep.password;
 		}
 	});
 	$http.get('/home')
@@ -336,9 +336,19 @@ app.controller('productcontroller',['$scope','$http','$rootScope',function($scop
 	$scope.price = $scope.product.price;
 	$scope.size = $scope.product.size;
 	$scope.imgURL = $scope.product.imgURL;
-	console.log($scope.imgURL);
+	var id = $scope.product.id;
+	var username = $rootScope.adminname;
+	var pid = {"id":id,"username":username};
+	//console.log($scope.imgURL);
 	$scope.addtocart = function(){
-		
+		$http.post('/add',pid)
+		.success(function(rep){
+			if(rep==='success'){
+				alert('added to cart!');
+			}else{
+				alert('sold out!');
+			}
+		})
 		
 	}
 

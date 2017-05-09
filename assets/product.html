@@ -1,13 +1,15 @@
 <table class='table'>
   <tr><th>Name</th><th>Price</th><th>Size</th></tr>
   <tr><td>{{name}}</td><td>{{price}}</td><td>{{size}}</td></tr>
-</table>
-
+  <tr><td><button ng-click='addtocart()' class="btn btn-primary">Add</button></td></tr>
+</table></br>
+<div>
+<article>Brand New,Got from Footsites, NO Refund!!!</article>
+</div></br>
 <div>
 <table class='table'>
-{{imgUrl}}
-<tr ng-repeat='value in imgURL track by $index'>
-<image src='{{value}}' class='image'></image>
-<tr>
+<tr ng-repeat='value in imgURL'>
+<td><image src={{value}} class='image'></image></td>
+</tr>
 </table>
 </div>
