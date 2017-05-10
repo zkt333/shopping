@@ -9,15 +9,6 @@ var conn_str = 'mongodb://localhost:27017/shopping';
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongodbstore = require('connect-mongodb-session')(session);
-
-/*var new_db = new mongodb.Db('aa', new mongodb.Server('localhost', 27017));
-new_db.open(function(err, db){
-	if(!err){
-		db.collection("aaa").insert({"test":"2323"});
-	}
-})*/
-
-
 app.use(express.static('assets'));
 app.use(bodyParser.json());
 var store = new mongodbstore({
@@ -59,25 +50,7 @@ app.get('/home',function(req,res){
 	})
 
 })
-/*app.post('/submit',function(req,res){
-		mongoclient.connect(conn_str,function(err,db){
-		if(err){
-			console.log('error occur');
-		}else{
-			db.collection('products').update({"product":{"id":req.body.productid}},{$set:{"product":{"quality":req.body.quality}},function(err,result){
-				console.log(result);
-				if(result){
 
-                       db.collection('orders').insert({"order":{"id":req.body.id,"productid":req.body.productid,"address":req.body.address,"price":req.body.price}});
-					   res.send('success');
-					
-				}
-				db.close();
-			}
-			
-		})
-	})
-})*/
 app.post('/login',function(req,res){
 	mongoclient.connect(conn_str,function(err,db){
 		if(err){
@@ -148,7 +121,7 @@ app.post('/add',function(req,res){
 			db.collection('products').findOne({"id":req.body.id},function(err,result){
 				if(result){
 					if(result.quality!="0"){
-						db.collection('customers').update({"username":req.body.username},{$set:{"orders":[{"productname":result.productname,"price":result.price,"quality":"1"}]}},function(err,re){
+						db.collection('cart').insert({"username":req.body.username,"id":req.body.id,"quality":1,"productname":req.body.productname,"price":req.body.price,"imgURL":req.body.imgURL,"size":req.body.size},function(err,re){
 							if(re){
 								console.log(re.username);
 								res.send('success');
@@ -169,6 +142,27 @@ app.post('/add',function(req,res){
 	})
 
 
+})
+app.post('/cart',function(req,res){
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('err')
+		}else{
+			console.log('connected');
+			db.collection('cart').find({"username":req.body.username}).toArray(function(err,result){
+				if(result){
+					res.send(result);
+				}else{
+					res.send('failed');
+				}
+				
+			})
+		}
+		
+		
+	})
+	
+	
 })
 
 app.listen(9109,function(){

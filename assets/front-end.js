@@ -37,6 +37,10 @@ app.config(function($routeProvider){
 		templateUrl:'product.html',
 		controller:'productcontroller',
 	})
+	.when('/admin',{
+		templateUrl:'admin.html',
+		controller:'admincontroller',
+	})
 	
 	
 });
@@ -48,6 +52,16 @@ app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$lo
 	    .then(function(){
 	    	callback();
 	    })
+	};
+	customerservice.logout = function(){
+		
+			$http.get('/logout')
+			.success(function(rep){
+				if(rep==='successful'){
+					$location.path('/login');
+				}
+			})
+	
 	};
 	return logservice;
 	
@@ -335,11 +349,23 @@ app.controller('productcontroller',['$scope','$http','$rootScope',function($scop
 	$scope.name = $scope.product.productname;
 	$scope.price = $scope.product.price;
 	$scope.size = $scope.product.size;
+	$scope.price = $scope.product.price;
 	$scope.imgURL = $scope.product.imgURL;
+	//console.log($scope.product.price);
+	var name = $scope.product.productname;
+	var price = $scope.product.price;
+	console.log()
+	var quality = 1;
+	var size = $scope.product.size;
+	var price = $scope.product.price;
+	var imgURL = $scope.product.imgURL;
+	var id = $scope.product.id;
+	console.log($scope.product.size);
+	//$scope.imgURL = $scope.product.imgURL;
 	var id = $scope.product.id;
 	var username = $rootScope.adminname;
-	var pid = {"id":id,"username":username};
-	//console.log($scope.imgURL);
+	var pid = {"id":id,"username":username,"productname":name,"size":size,"imgURL":imgURL,"price":price,"quality":quality};
+	console.log(pid);
 	$scope.addtocart = function(){
 		$http.post('/add',pid)
 		.success(function(rep){
@@ -356,3 +382,32 @@ app.controller('productcontroller',['$scope','$http','$rootScope',function($scop
 	
 	
 }])
+
+app.controller('cartcontroller',['$scope','$http','$rootScope',function($scope,$http,$rootScope){
+	var username = {"username":$rootScope.adminname}; 
+	$http.post('/cart',username)
+	.success(function(rep){
+		if(rep==='failed'){
+			alert('error occur')
+		}else{
+			console.log(rep[0]);
+			$scope.cart = rep;
+			//$scope.customer = rep;
+			$scope.username = rep.username;
+			//$scope.product = rep.orders;
+			$scope.productname = rep.productname;
+			$scope.price = rep.price;
+			$scope.quality = rep.quality;
+			$scope.imgURL = rep.imgURL;
+			$scope.totalprice = $scope.price;
+			
+		}
+	})
+	
+	
+	
+}])
+app.controller('admincontroller',['$scope','$http',function($scope,$http){
+	
+}])
+

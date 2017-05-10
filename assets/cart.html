@@ -1,8 +1,12 @@
 <div>
-<table>
-    <tr ng-repeat='value in customer' >
-    <td>product:{{value.name}}}}</td>
-    <td>Price:{{value.price}}}}</td>
+<a href='#/home'>back</a>
+<table class='table'>
+<tr><th>Product</th><th>Size</th><th>Price</th><th>Quality</th></tr>
+    <tr ng-repeat='value in cart'>
+    <td>{{value.productname}}</td>
+    <td>{{value.size}}</td>
+    <td>{{value.price}}</td>
+    <td>{{value.quality}}</td>
     </tr>
 </table>
 <div>total price:{{totalprice}}</div>
