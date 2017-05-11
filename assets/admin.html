@@ -1,0 +1,12 @@
+<table class='table'>
+   <tr ng-repeat='value in product'>
+   <td>{{value.productname}}</td>
+   <td>{{value.price}}</td>
+   <td>{{value.quality}}</td>
+   <td>{{value.id}}</td>
+   <td>{{value.size}}</td>
+   <td><button ng-click='edit(value.id)'>Edit</button></td>
+   </tr>
+   <button ng-click='addproduct()'>add product</button>
+   
+</table>

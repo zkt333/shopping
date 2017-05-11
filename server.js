@@ -2,10 +2,11 @@ var express = require('express');
 var app = express();
 var mongodb = require('mongodb');
 var http = require('http');
-
+var jwt = require('jsonwebtoken');
 var mongoclient = require('mongodb').MongoClient;
 var conn_str = 'mongodb://localhost:27017/shopping';
-
+var token = jwt.sign({ foo: 'bar' }, 'shhhhh');
+var older_token = jwt.sign({ foo: 'bar', iat: Math.floor(Date.now() / 1000) - 30 }, 'shhhhh');
 var bodyParser = require('body-parser');
 var session = require('express-session');
 var mongodbstore = require('connect-mongodb-session')(session);
@@ -15,6 +16,10 @@ var store = new mongodbstore({
 	uri:'mongodb://localhost:27017/shopping',
 	collection:'shopping_session'
 	});
+
+jwt.sign({
+	  data: 'foobar'
+	}, 'secret', { expiresIn: '1h' });
 app.use(
 		session({
 			secret:'shopping_sess_secret_key',
@@ -155,7 +160,7 @@ app.post('/cart',function(req,res){
 				}else{
 					res.send('failed');
 				}
-				
+				db.close();
 			})
 		}
 		
@@ -164,6 +169,55 @@ app.post('/cart',function(req,res){
 	
 	
 })
+/*app.delete('/delete',function(req.res){
+
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('error occur')
+		}else{
+			db.collection('cart').
+		}
+		
+		
+	})
+	
+})*/
+
+app.get('/admin',function(req,res){
+
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('err')
+		}else{
+			db.collection('products').find().toArray(function(err,result){
+				if(result){
+					res.send(result);
+				}
+			})
+		}
+		db.close();
+	})
+	
+	
+})
+app.post('/admin/edit',function(req,res){
+	mongoclient.connect(conn_str,function(err,db){
+		if(err){
+			console.log('err');
+		}else{
+			db.collection('products').findOne({"id":req.body.id},function(err,result){
+				if(result){
+					res.send(result);
+				}
+			})
+		}
+		db.close();
+	})
+	
+	
+})
+
+
 
 app.listen(9109,function(){
 	console.log('server running @ localhost:9109');

@@ -1,14 +1,15 @@
 <div>
 <a href='#/home'>back</a>
 <table class='table'>
-<tr><th>Product</th><th>Size</th><th>Price</th><th>Quality</th></tr>
+<tr><th>Product</th><th>Size</th><th>Price</th><th>Quality</th><th>Delete</th></tr>
     <tr ng-repeat='value in cart'>
     <td>{{value.productname}}</td>
     <td>{{value.size}}</td>
     <td>{{value.price}}</td>
     <td>{{value.quality}}</td>
+    <td><button ng-click='delete(value.id)'>delete</button></td>
     </tr>
 </table>
-<div>total price:{{totalprice}}</div>
+<div>total price:<strong>{{totalprice}}</strong></div>
 <button ng-click='tocheckout()'>continue to checkout</button>
 </div>
