@@ -45,19 +45,29 @@ app.config(function($routeProvider){
 		templateUrl:'edit.html',
 		controller:'editcontroller',
 	})
+	.when('/cnchecker',{
+		templateUrl:'nikeCNchecker.html',
+		controller:'cnchecker',
+	})
+	.when('/signup',{
+		templateUrl:'signup.html',
+		controller:'signupcontroller',
+	})
+	
 	
 	
 });
 /*fsdfsf*/
+
 app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$log){
-	var customerservice = {};    
-	customerservice.checkout = function(customer,callback){
+	var cust = {};    
+/*	cust.checkout = function(customer,callback){
 	    $http.post('/checkout',customer)
 	    .then(function(){
 	    	callback();
 	    })
-	};
-	customerservice.logout = function(){
+	};*/
+	cust.logout = function(){
 		
 			$http.get('/logout')
 			.success(function(rep){
@@ -67,9 +77,21 @@ app.factory('customerfactory',['$scope','$http','$log',function($scope,$http,$lo
 			})
 	
 	};
-	return logservice;
+	return cust;
 	
 	
+}])
+
+app.controller('signupcontroller',['$scope','$http',function($scope,$http){
+	$scope.signup = function(){
+	    var password = $scope.password;
+	    var username = $scope.username;
+	    var user = {"username":username,"password":password}
+	    $http.post('/signup',user)
+	    .success(function(rep){
+		  console.log(rep);
+	})
+	}
 }])
 app.controller('homecontroller',['$scope','$location','$http','$rootScope','$routeParams',function($scope,$location,$http,$rootScope,$routeParams){
 	$http.get('/isloggedin')
@@ -102,6 +124,11 @@ app.controller('homecontroller',['$scope','$location','$http','$rootScope','$rou
 			}
 		})
 	};
+//	$scope.logout = function(){
+//		customerfactory.logout();
+//		
+//	}
+	
 	
 	$scope.view = function(id){
 		console.log(id);
@@ -148,7 +175,7 @@ app.controller('checkoutcontroller',['$scope','$location','customefactory',funct
 	
 }])
 
-  app.controller('cncontroller',['$scope','$http','$location','$rootScope',function($scope,$http,$location,$rootScope){
+app.controller('cncontroller',['$scope','$http','$location','$rootScope',function($scope,$http,$location,$rootScope){
 		$http.get('/isloggedin')
 		.success(function(rep){
 			if(!rep){
@@ -208,7 +235,7 @@ app.controller('detailcncontroller',['$scope','$http','$location','$rootScope',f
 	      $rootScope.sizeinfo = rep.data.product.skus;
 	      $rootScope.fullTitle = rep.data.product.fullTitle;
 	      $rootScope.effectiveInStockStartSellDate = rep.data.product.effectiveInStockStartSellDate;
-	      $rootScope.link = 'https://www.nike.com/launch/thread/'+rep.data.id;
+	      $rootScope.link = 'https://www.nike.com/cn/launch/thread/'+rep.data.id;
 	      $rootScope.merchStatus = rep.data.product.merchStatus;
 	      $rootScope.selectionEngine = rep.data.product.selectionEngine;
 	      $rootScope.estimatedLaunchDate = rep.data.product.estimatedLaunchDate;
@@ -289,7 +316,7 @@ app.controller('detailuscontroller',['$scope','$http','$location','$rootScope',f
       $rootScope.sizeinfo = rep.data.product.skus;
       $rootScope.fullTitle = rep.data.product.fullTitle;
       $rootScope.effectiveInStockStartSellDate = rep.data.product.effectiveInStockStartSellDate;
-      $rootScope.link = 'https://www.nike.com/cn/launch/thread/'+rep.data.id;
+      $rootScope.link = 'https://www.nike.com/launch/thread/'+rep.data.id;
       $rootScope.merchStatus = rep.data.product.merchStatus;
       $rootScope.selectionEngine = rep.data.product.selectionEngine;
       $rootScope.estimatedLaunchDate = rep.data.product.estimatedLaunchDate;
@@ -318,14 +345,15 @@ app.controller('logincontroller',['$scope','$http','$location',function($scope,$
 		var customer = {"username":username,"password":password};
 		//console.log(username);
 		$http.post('/login',customer)
-	.success(function(rep){
-			if(rep==='success'){
-				$location.path('/home');
-			}else{
-				alert('wrong username or wrong password!!!');
-				$scope.username='';
-				$scope.password='';
-			}
+	  .success(function(rep){
+		$location.path('/home');
+//			if(rep==='success'){
+//				$location.path('/home');
+//			}else{
+//				alert('wrong username or wrong password!!!');
+//				$scope.username='';
+//				$scope.password='';
+//			}
 			
 		})
 		
@@ -381,20 +409,6 @@ app.controller('productcontroller',['$scope','$http','$rootScope','$location','$
 		
 	})
 
-	
-	$scope.addtocart = function(){
-        
-	}
-
-
-		
-
-
-
-
-
-	
-	
 	
 }])
 
@@ -459,7 +473,25 @@ app.controller('editcontroller',['$scope','$http',function($scope,$http){
 	$http.post('/admin/edit',id)
 	.success(function(rep){
 		console.log(rep);
+		$scope.price = rep.price;
+		$scope.productname = rep.productname;
+		$scope.quality = rep.quality;
+		$scope.img = rep.imgURL;
 	})
+	
+}])
+app.controller('cnchecker',['$scope','$http',function($scope,$http){
+	
+	$scope.find = function(stylenumber){
+		var stylenumber = $scope.stylenumber;
+		$http.get('https://api.nike.com/commerce/productsize/products/'+stylenumber+'/availability?country=CN&channel=SNKRS')
+		.success(function(rep){
+			//$scope.product = rep;
+			$scope.sizes = rep.sizes;
+			
+			console.log(rep.sizes);
+		})
+	}
 	
 }])
 
